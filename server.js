@@ -105,7 +105,25 @@ router.post('/signin', function (req, res) {
 router.route('/movies')
   .get(authJwtController.isAuthenticated, async (req, res) => {
     try {
-      const movies = await Movie.find();
+        const aggregate = [
+            {
+                $lookup: {
+                from: 'reviews',
+                localField: '_id',
+                foreignField: 'movieId',
+                as: 'movieReviews'
+                }
+            },
+            {
+                $addFields: {
+                avgRating: { $avg: '$movieReviews.rating' }
+                }
+            },
+            {
+                $sort: { avgRating: -1 }
+            }
+            ];
+      const movies = await Movie.aggregate(aggregate);
       res.status(200).json({ success: true, movies });
     } catch (err) {
       console.error(err);
@@ -153,8 +171,14 @@ router.route('/movies/:title')
                     foreignField: 'movieId', 
                     as: 'reviews'
                 }
-            }
-        ]); 
+            },
+            {
+        $addFields: {
+            avgRating: { $avg: '$reviews.rating' }
+        }
+    }
+
+    ]); 
         if (!movieWithReviews.length){
             return res.status(404).json({ success: false, message: 'Movie not found.'});
         }
