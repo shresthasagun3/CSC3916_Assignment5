@@ -37,3 +37,7 @@ The purpose of this assignment is to create a React Single Page App over your de
 - https://github.com/facebook/create-react-app
 - https://github.com/mars/create-react-app-buildpack#user-content-requires
 
+
+ASSIGNMENT 4 URL: https://csc3916-assignment4-xv1w.onrender.com
+NETLIFY REACT URL: https://assignment5repo.netlify.app/#/signin 
+
